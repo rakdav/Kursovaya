@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Kursovaya"
         mc:Ignorable="d"
-        Title="Торговля" Height="450" Width="800">
+        Title="Торговля" Height="450" Width="800" FontSize="20">
     <Grid>
         <TabControl>
             <TabItem Header="Товар">
@@ -14,7 +14,12 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <DataGrid x:Name="TovarTable" Grid.Row="0" Margin="10" AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray" 
+                    <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="50"/>
+                        </Grid.RowDefinitions>
+                        <DataGrid x:Name="TovarTable" Grid.Row="0" Margin="10" AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray" 
                               RowBackground="LightGray" AlternatingRowBackground="White" SelectionChanged="TovarTable_SelectionChanged">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="id" Binding="{Binding Path=id_tovar}" Width="90" Visibility="Hidden" />
@@ -23,7 +28,16 @@
                             <DataGridTextColumn Header="Сорт" Binding="{Binding Path=sort}" Width="200" />
                         </DataGrid.Columns>
                     </DataGrid>
-                   
+                    <StackPanel Grid.Row="1" Orientation="Horizontal">
+                        <ComboBox Name="phonesList" Height="30" HorizontalAlignment="Left" Width="150">
+                                <TextBlock Selector.IsSelected="True">Название</TextBlock>
+                            <TextBlock>Цена</TextBlock>
+                            <TextBlock>Сорт</TextBlock>
+                        </ComboBox>
+                            <TextBox x:Name="filter" Width="150" Margin="10" TextChanged="filter_TextChanged"/>
+                            <Button Content="X" Width="50" Height="30"/>
+                        </StackPanel>
+                    </Grid>
                     <Grid Grid.Column="1">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="50"/>
@@ -39,7 +53,7 @@
                         <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="0" HorizontalAlignment="Center">
                             <Button x:Name="add" Content="Добавить" Margin="10" Background="Green" Width="100" Click="Button_Click"/>
                             <Button x:Name="edit" Content="Редактировать" Margin="10" Background="Blue" Width="100" Click="edit_Click"/>
-                            <Button x:Name="delete" Content="Удалить" Margin="10" Background="Red" Width="100"/>
+                            <Button x:Name="delete" Content="Удалить" Margin="10" Background="Red" Width="100" Click="delete_Click"/>
                         </StackPanel>
                     </Grid>
                 </Grid>

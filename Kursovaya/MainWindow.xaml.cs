@@ -90,5 +90,24 @@ namespace Kursovaya
                 UpdateTovar();
             }
         }
+
+        private void delete_Click(object sender, RoutedEventArgs e)
+        {
+            Tovar tovar = TovarTable.SelectedItem as Tovar;
+            if (tovar != null)
+            {
+                using (ModelDB db = new ModelDB())
+                {
+                    db.Entry(tovar).State = System.Data.Entity.EntityState.Deleted;
+                    db.SaveChanges();
+                }
+                UpdateTovar();
+            }
+        }
+
+        private void filter_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }
