@@ -30,12 +30,12 @@
                     </DataGrid>
                     <StackPanel Grid.Row="1" Orientation="Horizontal">
                         <ComboBox Name="phonesList" Height="30" HorizontalAlignment="Left" Width="150">
-                                <TextBlock Selector.IsSelected="True">Название</TextBlock>
+                            <TextBlock>Название</TextBlock>
                             <TextBlock>Цена</TextBlock>
                             <TextBlock>Сорт</TextBlock>
                         </ComboBox>
                             <TextBox x:Name="filter" Width="150" Margin="10" TextChanged="filter_TextChanged"/>
-                            <Button Content="X" Width="50" Height="30"/>
+                            <Button Content="X" Width="50" Height="30" Click="Button_Click_1"/>
                         </StackPanel>
                     </Grid>
                     <Grid Grid.Column="1">
@@ -58,7 +58,40 @@
                     </Grid>
                 </Grid>
             </TabItem>
-            <TabItem Header="Клиент">Вторая вкладка</TabItem>
+            <TabItem Header="Клиент">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="0.8*" />
+                    </Grid.ColumnDefinitions>
+                    <ListBox Grid.Column="0" ItemsSource="{Binding Clients}"
+                 SelectedItem="{Binding SelectedClient}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="5">
+                                    <TextBlock FontSize="18" Text="{Binding Path=Fio}" />
+                                    <TextBlock Text="{Binding Path=Age}" />
+                                    <TextBlock Text="{Binding Path=Phone}" />
+                                    <TextBlock Text="{Binding Path=City}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <StackPanel Grid.Column="1" DataContext="{Binding SelectedClient}">
+                        <TextBlock Text="Выбранный элемент"  />
+                        <TextBlock Text="ФИО" />
+                        <TextBox Text="{Binding Fio, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock Text="Возраст" />
+                        <TextBox Text="{Binding Age, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock Text="Телефон" />
+                        <TextBox Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock Text="Город" />
+                        <TextBox Text="{Binding City, UpdateSourceTrigger=PropertyChanged}" />
+
+                    </StackPanel>
+                </Grid>
+                
+            </TabItem>
             <TabItem Header="Сделка">Вторая вкладка</TabItem>
         </TabControl>
     </Grid>

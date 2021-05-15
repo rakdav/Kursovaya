@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Kursovaya.Model;
+using Kursovaya.ViewModel;
+
 namespace Kursovaya
 {
     /// <summary>
@@ -26,6 +28,8 @@ namespace Kursovaya
             UpdateTovar();
             edit.Visibility = Visibility.Collapsed;
             delete.Visibility = Visibility.Collapsed;
+            phonesList.SelectedIndex = 0;
+            DataContext = new ClientViewModel();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -107,7 +111,62 @@ namespace Kursovaya
 
         private void filter_TextChanged(object sender, TextChangedEventArgs e)
         {
+            
+            String str = filter.Text;
+            if (phonesList.SelectedIndex==0)
+            {
+                if (str.Length != 0)
+                {
+                    using (ModelDB db = new ModelDB())
+                    {
+                        List<Tovar> list = db.Tovar.Where(p => p.name.StartsWith(str)).ToList();
+                        TovarTable.ItemsSource = null;
+                        TovarTable.ItemsSource = list;
+                    }
+                }
+                else
+                {
+                    UpdateTovar();
+                }
+            }
+            else if(phonesList.SelectedIndex == 1)
+            {
+                if (str.Length != 0)
+                {
+                    using (ModelDB db = new ModelDB())
+                    {
+                        List<Tovar> list = db.Tovar.Where(p => p.price.ToString().StartsWith(str)).ToList();
+                        TovarTable.ItemsSource = null;
+                        TovarTable.ItemsSource = list;
+                    }
+                }
+                else
+                {
+                    UpdateTovar();
+                }
+            }
+            else
+            {
+                if (str.Length != 0)
+                {
+                    using (ModelDB db = new ModelDB())
+                    {
+                        List<Tovar> list = db.Tovar.Where(p => p.sort.StartsWith(str)).ToList();
+                        TovarTable.ItemsSource = null;
+                        TovarTable.ItemsSource = list;
+                    }
+                }
+                else
+                {
+                    UpdateTovar();
+                }
+            }
+        }
 
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            UpdateTovar();
+            filter.Text = "";
         }
     }
 }
