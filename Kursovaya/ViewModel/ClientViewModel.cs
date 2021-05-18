@@ -122,7 +122,7 @@ namespace Kursovaya.ViewModel
             using (ModelDB db = new ModelDB())
             {
                 List<Client> clients = db.Client.Where(p => p.Fio.StartsWith(fio)).ToList();
-                foreach (Client c in clients) Clients.Add(c);
+                 foreach (Client c in clients) Clients.Add(c);
             }
 
         }
