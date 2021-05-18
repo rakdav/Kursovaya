@@ -168,5 +168,11 @@ namespace Kursovaya
             UpdateTovar();
             filter.Text = "";
         }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            DataContext = new ClientViewModel(super.Text);
+        }
+
     }
 }

@@ -60,6 +60,10 @@
             </TabItem>
             <TabItem Header="Клиент">
                 <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="80" />
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="0.8*" />
@@ -80,15 +84,24 @@
                     <StackPanel Grid.Column="1" DataContext="{Binding SelectedClient}">
                         <TextBlock Text="Выбранный элемент"  />
                         <TextBlock Text="ФИО" />
-                        <TextBox Text="{Binding Fio, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBox x:Name="FIO" Text="{Binding Fio, UpdateSourceTrigger=PropertyChanged}" />
                         <TextBlock Text="Возраст" />
-                        <TextBox Text="{Binding Age, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBox x:Name="AGE" Text="{Binding Age, UpdateSourceTrigger=PropertyChanged}" />
                         <TextBlock Text="Телефон" />
-                        <TextBox Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBox x:Name="PHONE" Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged}" />
                         <TextBlock Text="Город" />
-                        <TextBox Text="{Binding City, UpdateSourceTrigger=PropertyChanged}" />
-
+                        <TextBox x:Name="CITY" Text="{Binding City, UpdateSourceTrigger=PropertyChanged}" />
                     </StackPanel>
+                   
+                    <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" Margin="10">
+                        <Button Command="{Binding AddCommand}" Width="100" Margin="10">+</Button>
+                        <TextBox x:Name="super" Margin="10" Width="150" TextChanged="TextBox_TextChanged" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" Margin="10">
+                        <Button Command="{Binding SaveCommand}" Width="100" Margin="10">Save</Button>
+                        <Button Command="{Binding DeleteCommand}" Width="100" Margin="10">Delete</Button>
+                    </StackPanel>
+
                 </Grid>
                 
             </TabItem>
