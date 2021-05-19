@@ -13,6 +13,7 @@ namespace Kursovaya.Model
         public Tovar()
         {
             Sdelka = new HashSet<Sdelka>();
+
         }
 
         [Key]
