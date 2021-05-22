@@ -30,6 +30,20 @@ namespace Kursovaya
             delete.Visibility = Visibility.Collapsed;
             phonesList.SelectedIndex = 0;
             DataContext = new ClientViewModel();
+            UpdateSdelka();
+            using (ModelDB db = new ModelDB())
+            {
+                List<Client> clients = db.Client.ToList();
+                foreach(Client client in clients)
+                {
+                    id_client.Items.Add(client.Fio);
+                }
+                List<Tovar> tovars = db.Tovar.ToList();
+                foreach (Tovar tovar in tovars)
+                {
+                    id_tovar.Items.Add(tovar.name);
+                }
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -58,6 +72,27 @@ namespace Kursovaya
             price.Text = "";
             sort.Text = "";
             description.Text = "";
+        }
+
+        private void UpdateSdelka()
+        {
+            using (ModelDB db = new ModelDB())
+            {
+                var result = from sdelka in db.Sdelka
+                             join tovar in db.Tovar on sdelka.id_tovar equals tovar.id_tovar
+                             join client in db.Client on sdelka.id_client equals client.Id_client
+                             select new
+                             {
+                                 data = sdelka.data,
+                                 count = sdelka.count,
+                                 summa = sdelka.count*tovar.price,
+                                 id_tovar = tovar.name,
+                                 id_client=client.Fio,
+                                 sdelka1=sdelka.sdelka1
+                             };
+                sdelkaList.ItemsSource = null;
+                sdelkaList.ItemsSource = result.ToList();
+            }
         }
 
         private void TovarTable_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -174,5 +209,39 @@ namespace Kursovaya
             DataContext = new ClientViewModel(super.Text);
         }
 
+        private void id_tovar_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            using (ModelDB db = new ModelDB())
+            {
+                string tovarName = id_tovar.SelectedItem.ToString();
+                decimal price = db.Tovar.Where(p => p.name.Equals(tovarName)).FirstOrDefault().price;
+                Price.Text = price.ToString();
+            }
+        }
+
+        private void count_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (count.Text.Length != 0)
+                sum.Text = (decimal.Parse(Price.Text) * int.Parse(count.Text)).ToString();
+            else sum.Text = "";
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            using (ModelDB db = new ModelDB())
+            {
+                int id_cl = db.Client.Where(p => p.Fio.Equals(id_client.SelectedItem.ToString())).FirstOrDefault().Id_client;
+                int id_tv = db.Tovar.Where(p => p.name.Equals(id_tovar.SelectedItem.ToString())).FirstOrDefault().id_tovar;
+                Sdelka sdelka = new Sdelka();
+                sdelka.id_client = id_cl;
+                sdelka.id_tovar = id_tv;
+                sdelka.sum = decimal.Parse(sum.Text);
+                sdelka.count = int.Parse(count.Text);
+                sdelka.data = Date.SelectedDate.Value;
+                db.Sdelka.Add(sdelka);
+                db.SaveChanges();
+                UpdateSdelka();
+            }
+        }
     }
 }
