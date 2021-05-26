@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,7 +26,8 @@ namespace Kursovaya
     /// </summary>
     public partial class MainWindow : Window
     {
-       
+        string connectionString = ConfigurationManager.ConnectionStrings["ModelDB"].
+            ConnectionString;
         public MainWindow()
         {
             InitializeComponent();
@@ -46,6 +50,8 @@ namespace Kursovaya
                     id_tovar.Items.Add(tovar.name);
                 }
             }
+          
+
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -300,6 +306,45 @@ namespace Kursovaya
             }
             sdelkaList.SelectedItem = null;
             UpdateSdelka();
+        }
+
+        private void Button_Click_5(object sender, RoutedEventArgs e)
+        {
+            Filter filter = new Filter();
+            if (filter.ShowDialog() == true)
+            {
+                List<SdelkaModel> sdelkaModels = new List<SdelkaModel>();
+                string query = filter.Querry;
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    SqlDataAdapter adapter = new SqlDataAdapter(query, connection);
+                    DataSet ds = new DataSet();
+                    adapter.Fill(ds);
+                    foreach (DataTable dt in ds.Tables)
+                    {
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            var cells = row.ItemArray;
+                            SdelkaModel sdelka = new SdelkaModel();
+                            sdelka.id = int.Parse(cells[0].ToString());
+                            sdelka.data = DateTime.Parse(cells[1].ToString());
+                            sdelka.count = int.Parse(cells[2].ToString());
+                            sdelka.sum = decimal.Parse(cells[3].ToString());
+                            using (ModelDB db = new ModelDB())
+                            {
+                                int id_t = int.Parse(cells[4].ToString());
+                                sdelka.name= db.Tovar.Where(p => p.id_tovar==id_t).FirstOrDefault().name;
+                                int id_c = int.Parse(cells[5].ToString());
+                                sdelka.fio = db.Client.Where(p => p.Id_client ==id_c).FirstOrDefault().Fio;
+                            }
+                            sdelkaModels.Add(sdelka);
+                        }
+                    }
+                    sdelkaList.ItemsSource = null;
+                    sdelkaList.ItemsSource = sdelkaModels;
+                    
+                }
+            }
         }
     }
 }
