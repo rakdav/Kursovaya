@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +23,7 @@ namespace Kursovaya
     /// </summary>
     public partial class MainWindow : Window
     {
+       
         public MainWindow()
         {
             InitializeComponent();
@@ -76,21 +78,21 @@ namespace Kursovaya
 
         private void UpdateSdelka()
         {
+            sdelkaList.ItemsSource = null;
             using (ModelDB db = new ModelDB())
             {
                 var result = from sdelka in db.Sdelka
                              join tovar in db.Tovar on sdelka.id_tovar equals tovar.id_tovar
                              join client in db.Client on sdelka.id_client equals client.Id_client
-                             select new
+                             select new SdelkaModel
                              {
                                  data = sdelka.data,
                                  count = sdelka.count,
-                                 summa = sdelka.count*tovar.price,
-                                 id_tovar = tovar.name,
-                                 id_client=client.Fio,
-                                 sdelka1=sdelka.sdelka1
+                                 sum = sdelka.count*tovar.price,
+                                 name = sdelka.Tovar.name,
+                                 fio=sdelka.Client.Fio,
+                                 id=sdelka.sdelka1
                              };
-                sdelkaList.ItemsSource = null;
                 sdelkaList.ItemsSource = result.ToList();
             }
         }
@@ -242,6 +244,62 @@ namespace Kursovaya
                 db.SaveChanges();
                 UpdateSdelka();
             }
+        }
+
+        private void sdelkaList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (sdelkaList.SelectedItem!=null)
+            {
+                SdelkaModel sdelkaModel = (SdelkaModel)sdelkaList.SelectedItem;
+                using (ModelDB db = new ModelDB())
+                {
+                    Sdelka sdelka = db.Sdelka.Where(p => p.sdelka1 == sdelkaModel.id).FirstOrDefault();
+                    id_client.Text = db.Client.Where(p => p.Id_client == sdelka.id_client).FirstOrDefault().Fio;
+                    id_tovar.Text = db.Tovar.Where(p => p.id_tovar == sdelka.id_tovar).FirstOrDefault().name;
+                    count.Text = sdelka.count.ToString();
+                    sum.Text = sdelka.sum.ToString();
+                    Date.SelectedDate = sdelka.data;
+                    sdelkaModel = null;
+                }
+            }
+          
+        }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            SdelkaModel sdelkaModel = (SdelkaModel)sdelkaList.SelectedItem;
+            using (ModelDB db = new ModelDB())
+            {
+                Sdelka sdelka = db.Sdelka.Where(p => p.sdelka1 == sdelkaModel.id).FirstOrDefault();
+                sdelka.sum = decimal.Parse(sum.Text);
+                sdelka.sdelka1 = sdelkaModel.id;
+                sdelka.count = int.Parse(count.Text);
+                sdelka.data = Date.SelectedDate.Value;
+                string name = id_tovar.SelectedValue.ToString();
+                string fio = id_client.SelectedValue.ToString();
+                sdelka.id_tovar = db.Tovar.Where(p => p.name.Equals(name)).FirstOrDefault().id_tovar;
+                sdelka.id_client = db.Client.Where(p => p.Fio.Equals(fio)).FirstOrDefault().Id_client;
+                db.Entry(sdelka).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
+            }
+            UpdateSdelka();
+            sdelkaList.SelectedItem = null;
+        }
+
+        private void Button_Click_4(object sender, RoutedEventArgs e)
+        {
+            SdelkaModel sdelkaModel = (SdelkaModel)sdelkaList.SelectedItem;
+            using (ModelDB db = new ModelDB())
+            {
+                Sdelka sdelka = db.Sdelka.Where(p => p.sdelka1 == sdelkaModel.id).FirstOrDefault();
+                if (sdelka != null)
+                {
+                    db.Entry(sdelka).State = EntityState.Deleted;
+                    db.SaveChanges();
+                }
+            }
+            sdelkaList.SelectedItem = null;
+            UpdateSdelka();
         }
     }
 }

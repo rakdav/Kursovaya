@@ -64,6 +64,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\SdelkaModel.cs" />
     <Compile Include="ViewModel\ClientViewModel.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Page Include="MainWindow.xaml">
