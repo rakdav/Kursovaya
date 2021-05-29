@@ -21,11 +21,11 @@
                     </Grid.RowDefinitions>
                     <ToolBar Height="25" VerticalAlignment="Top" Grid.Row="0" Grid.ColumnSpan="2" >
                         <ToggleButton>
-                            <Image Source="icon0.gif" />
+                            <Image Source="Sources/excel.bmp" />
                         </ToggleButton>
                         <Separator />
                         <Button>
-                            <Image Source="icon1.gif" />
+                            <Image Source="" />
                         </Button>
                         <Separator />
                         <Button>
