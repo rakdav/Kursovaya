@@ -357,6 +357,11 @@ namespace Kursovaya
 
         private void ToggleButton_Click(object sender, RoutedEventArgs e)
         {
+            Load();
+        }
+
+        private async void Load()
+        {
             try
             {
                 OpenFileDialog openFile = new OpenFileDialog();
@@ -381,22 +386,22 @@ namespace Kursovaya
                             {
                                 if (row.GetCell(j) != null)
                                 {
-                                   if(j==0) client.Fio = row.GetCell(j).ToString();
-                                   if (j == 1) client.Age =int.Parse(row.GetCell(j).ToString());
-                                   if (j == 2) client.Phone = row.GetCell(j).ToString();
-                                   if (j == 3) client.City = row.GetCell(j).ToString();
+                                    if (j == 0) client.Fio = row.GetCell(j).ToString();
+                                    if (j == 1) client.Age = int.Parse(row.GetCell(j).ToString());
+                                    if (j == 2) client.Phone = row.GetCell(j).ToString();
+                                    if (j == 3) client.City = row.GetCell(j).ToString();
                                 }
                             }
-                            using (ModelDB db=new ModelDB())
+                            using (ModelDB db = new ModelDB())
                             {
                                 db.Client.Add(client);
-                                db.SaveChanges();
+                                await db.SaveChangesAsync();
                             }
                         }
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
