@@ -5,21 +5,45 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Kursovaya"
         mc:Ignorable="d"
-        Title="Торговля" Height="450" Width="800" FontSize="20">
+        Title="Торговля" Height="500" Width="800" FontSize="20">
     <Grid>
         <TabControl>
-            <TabItem Header="Товар">
+            <TabItem Header="Товар" Height="35" VerticalAlignment="Top">
+              
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <ToolBar Height="25" VerticalAlignment="Top" Grid.Row="0" Grid.ColumnSpan="2" >
+                        <ToggleButton>
+                            <Image Source="icon0.gif" />
+                        </ToggleButton>
+                        <Separator />
+                        <Button>
+                            <Image Source="icon1.gif" />
+                        </Button>
+                        <Separator />
+                        <Button>
+                            <Image Source="icon2.png" />
+                        </Button>
+                        <Separator />
+                        <Button>
+                            <Image Source="icon3.png" />
+                        </Button>
+                        <TextBox Foreground="LightGray" Width="100">Поиск...</TextBox>
+                    </ToolBar>
+                    <Grid Grid.Column="0" Grid.Row="1">
                         <Grid.RowDefinitions>
                             <RowDefinition/>
                             <RowDefinition Height="50"/>
                         </Grid.RowDefinitions>
-                        <DataGrid x:Name="TovarTable" Grid.Row="0" Margin="10" AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray" 
+                        
+                        <DataGrid x:Name="TovarTable" Margin="10" AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray" 
                               RowBackground="LightGray" AlternatingRowBackground="White" SelectionChanged="TovarTable_SelectionChanged">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="id" Binding="{Binding Path=id_tovar}" Width="90" Visibility="Hidden" />
@@ -28,7 +52,7 @@
                                 <DataGridTextColumn Header="Сорт" Binding="{Binding Path=sort}" Width="200" />
                             </DataGrid.Columns>
                         </DataGrid>
-                        <StackPanel Grid.Row="1" Orientation="Horizontal">
+                        <StackPanel Grid.Row="2" Orientation="Horizontal">
                             <ComboBox Name="phonesList" Height="30" HorizontalAlignment="Left" Width="150">
                                 <TextBlock>Название</TextBlock>
                                 <TextBlock>Цена</TextBlock>
@@ -38,7 +62,7 @@
                             <Button Content="X" Width="50" Height="30" Click="Button_Click_1"/>
                         </StackPanel>
                     </Grid>
-                    <Grid Grid.Column="1">
+                    <Grid Grid.Column="1" Grid.Row="1">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="50"/>
                             <RowDefinition Height="50"/>
@@ -131,7 +155,8 @@
                         </ListView.View>
                     </ListView>
                     <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center" Grid.ColumnSpan="2">
-                        <Button Content="Фильтр" Margin="10" Click="Button_Click_5"/>
+                        <Button Content="Фильтр" Margin="10" Click="Button_Click_5" Width="100"/>
+                        <Button Content="Сброс" Margin="10" Width="100" Click="Button_Click_6"/>
                     </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Vertical">
 

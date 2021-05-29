@@ -341,10 +341,14 @@ namespace Kursovaya
                         }
                     }
                     sdelkaList.ItemsSource = null;
-                    sdelkaList.ItemsSource = sdelkaModels;
-                    
+                    sdelkaList.ItemsSource = sdelkaModels;               
                 }
             }
+        }
+
+        private void Button_Click_6(object sender, RoutedEventArgs e)
+        {
+            UpdateSdelka();
         }
     }
 }
