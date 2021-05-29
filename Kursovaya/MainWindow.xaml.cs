@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.Entity;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +19,9 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Kursovaya.Model;
 using Kursovaya.ViewModel;
+using Microsoft.Win32;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 
 namespace Kursovaya
 {
@@ -349,6 +353,53 @@ namespace Kursovaya
         private void Button_Click_6(object sender, RoutedEventArgs e)
         {
             UpdateSdelka();
+        }
+
+        private void ToggleButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                OpenFileDialog openFile = new OpenFileDialog();
+                openFile.Filter = "Text files(*.xlsx)|*.xlsx|All files(*.*)|*.*";
+                if (openFile.ShowDialog() == true)
+                {
+                    string path = openFile.FileName;
+                    ISheet sheet;
+                    using (var stream = new FileStream(path, FileMode.Open))
+                    {
+                        stream.Position = 0;
+                        XSSFWorkbook xssWorkbook = new XSSFWorkbook(stream);
+                        sheet = xssWorkbook.GetSheetAt(0);
+                        IRow headerRow = sheet.GetRow(0);
+                        int cellCount = headerRow.LastCellNum;
+                        for (int i = (sheet.FirstRowNum + 1); i <= sheet.LastRowNum; i++)
+                        {
+                            IRow row = sheet.GetRow(i);
+                            if (row == null) continue;
+                            Client client = new Client();
+                            for (int j = row.FirstCellNum; j < cellCount; j++)
+                            {
+                                if (row.GetCell(j) != null)
+                                {
+                                   if(j==0) client.Fio = row.GetCell(j).ToString();
+                                   if (j == 1) client.Age =int.Parse(row.GetCell(j).ToString());
+                                   if (j == 2) client.Phone = row.GetCell(j).ToString();
+                                   if (j == 3) client.City = row.GetCell(j).ToString();
+                                }
+                            }
+                            using (ModelDB db=new ModelDB())
+                            {
+                                db.Client.Add(client);
+                                db.SaveChanges();
+                            }
+                        }
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }
